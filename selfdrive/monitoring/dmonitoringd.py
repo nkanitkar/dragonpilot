@@ -11,6 +11,7 @@ from common.realtime import DT_DMON
 from common.realtime import sec_since_boot
 import time
 
+
 def dmonitoringd_thread(sm=None, pm=None):
   gc.disable()
   set_realtime_priority(53)

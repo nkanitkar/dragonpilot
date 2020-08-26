@@ -1,6 +1,7 @@
 # This Python file uses the following encoding: utf-8
 # -*- coding: utf-8 -*-
 from functools import total_ordering
+
 from cereal import log, car
 from common.realtime import DT_CTRL
 from selfdrive.config import Conversions as CV
@@ -666,6 +667,16 @@ EVENTS = {
   EventName.deviceFalling: {
     ET.SOFT_DISABLE: SoftDisableAlert(_("Device Fell Off Mount")),
     ET.NO_ENTRY: NoEntryAlert(_("Device Fell Off Mount")),
+  },
+
+  EventName.posenetInvalid: {
+    ET.SOFT_DISABLE: SoftDisableAlert("Vision Model Output Uncertain"),
+    ET.NO_ENTRY: NoEntryAlert("Vision Model Output Uncertain"),
+  },
+
+  EventName.deviceFalling: {
+    ET.SOFT_DISABLE: SoftDisableAlert("Device Fell Off Mount"),
+    ET.NO_ENTRY: NoEntryAlert("Device Fell Off Mount"),
   },
 
   EventName.lowMemory: {

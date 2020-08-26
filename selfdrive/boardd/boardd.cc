@@ -305,6 +305,7 @@ void can_health_thread() {
 
   // run at 2hz
   while (!do_exit && panda->connected) {
+    // dp
     if (check_cnt % 60 == 0) {
       sm.update();
       if (sm.updated("dragonConf") && sm["dragonConf"].getDragonConf().getDpAutoShutdown()) {
@@ -581,7 +582,6 @@ void pigeon_thread() {
   uint64_t cnt = 0;
 
   pigeon_init();
-
   // dp
   #ifdef DisableRelay
   panda->set_safety_model(cereal::CarParams::SafetyModel::TOYOTA);

@@ -251,8 +251,8 @@ class CarInterface(CarInterfaceBase):
 
     ret.enableCamera = is_ecu_disconnected(fingerprint[0], FINGERPRINTS, ECU_FINGERPRINT, candidate, Ecu.fwdCamera) or has_relay
 
-    ret.stoppingControl = True
-    ret.startAccel = 0.0
+    # ret.stoppingControl = True
+    # ret.startAccel = 0.0
 
     # ignore CAN2 address if L-CAN on the same BUS
     ret.mdpsBus = 1 if 593 in fingerprint[1] and 1296 not in fingerprint[1] else 0
@@ -260,7 +260,7 @@ class CarInterface(CarInterfaceBase):
     ret.sccBus = 0 if 1056 in fingerprint[0] else 1 if 1056 in fingerprint[1] and 1296 not in fingerprint[1] \
       else 2 if 1056 in fingerprint[2] else -1
     ret.radarOffCan = ret.sccBus == -1
-    ret.openpilotLongitudinalControl = False #TODO make ui toggle
+    # ret.openpilotLongitudinalControl = False #TODO make ui toggle
     ret.enableCruise = not ret.radarOffCan
     # ret.spasEnabled = False
 
@@ -313,32 +313,33 @@ class CarInterface(CarInterfaceBase):
 
     events = self.create_common_events(ret)
 
-    if self.CC.longcontrol and self.CS.cruise_unavail:
-      events.add(EventName.brakeUnavailable)
+    # if self.CC.longcontrol and self.CS.cruise_unavail:
+    #   events.add(EventName.brakeUnavailable)
     if abs(ret.steeringAngle) > 90. and EventName.steerTempUnavailable not in events.events:
       events.add(EventName.steerTempUnavailable)
     if self.low_speed_alert and not self.CS.mdps_bus:
       events.add(EventName.belowSteerSpeed)
-    if not self.CC.longcontrol and EventName.pedalPressed in events.events:
-      events.events.remove(EventName.pedalPressed)
+    # if not self.CC.longcontrol and EventName.pedalPressed in events.events:
+    #   events.events.remove(EventName.pedalPressed)
 
     # handle button presses
-    for b in ret.buttonEvents:
-      # do disable on button down
-      if b.type == ButtonType.cancel and b.pressed:
-        events.add(EventName.buttonCancel)
-      if self.CC.longcontrol and not self.CC.scc_live:
-        # do enable on both accel and decel buttons
-        if b.type in [ButtonType.accelCruise, ButtonType.decelCruise] and not b.pressed:
-          events.add(EventName.buttonEnable)
-        if EventName.wrongCarMode in events.events:
-          events.events.remove(EventName.wrongCarMode)
-        if EventName.pcmDisable in events.events:
-          events.events.remove(EventName.pcmDisable)
-      elif not self.CC.longcontrol and ret.cruiseState.enabled:
-        # do enable on decel button only
-        if b.type == ButtonType.decelCruise and not b.pressed:
-          events.add(EventName.buttonEnable)
+    # for b in ret.buttonEvents:
+    #   # do disable on button down
+    #   if b.type == ButtonType.cancel and b.pressed:
+    #     events.add(EventName.buttonCancel)
+      # if self.CC.longcontrol and not self.CC.scc_live:
+      #   # do enable on both accel and decel buttons
+      #   if b.type in [ButtonType.accelCruise, ButtonType.decelCruise] and not b.pressed:
+      #     events.add(EventName.buttonEnable)
+      #   if EventName.wrongCarMode in events.events:
+      #     events.events.remove(EventName.wrongCarMode)
+      #   if EventName.pcmDisable in events.events:
+      #     events.events.remove(EventName.pcmDisable)
+      # elif not self.CC.longcontrol and ret.cruiseState.enabled:
+      # if ret.cruiseState.enabled:
+      #   # do enable on decel button only
+      #   if b.type == ButtonType.decelCruise and not b.pressed:
+      #     events.add(EventName.buttonEnable)
 
     ret.events = events.to_msg()
 

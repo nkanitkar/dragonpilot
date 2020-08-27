@@ -1,10 +1,8 @@
 from cereal import car
 from common.realtime import DT_CTRL
 from selfdrive.car import apply_std_steer_torque_limits
-from common.numpy_fast import clip
-from selfdrive.car.hyundai.hyundaican import create_lkas11, create_clu11, create_lfa_mfa, \
-  create_scc11, create_scc12,  create_scc13, create_scc14, \
-  create_mdps12
+# from common.numpy_fast import clip
+from selfdrive.car.hyundai.hyundaican import create_lkas11, create_clu11, create_lfa_mfa, create_mdps12
 from selfdrive.car.hyundai.values import Buttons, SteerLimitParams, CAR, FEATURES
 from selfdrive.config import Conversions as CV
 from opendbc.can.packer import CANPacker
@@ -13,22 +11,22 @@ from common.dp_common import common_controller_ctrl
 VisualAlert = car.CarControl.HUDControl.VisualAlert
 min_set_speed = 30 * CV.KPH_TO_MS
 
-# Accel limits
-ACCEL_HYST_GAP = 0.02  # don't change accel command for small oscilalitons within this value
-ACCEL_MAX = 1.5  # 1.5 m/s2
-ACCEL_MIN = -3.0 # 3   m/s2
-ACCEL_SCALE = max(ACCEL_MAX, -ACCEL_MIN)
+# # Accel limits
+# ACCEL_HYST_GAP = 0.02  # don't change accel command for small oscilalitons within this value
+# ACCEL_MAX = 1.5  # 1.5 m/s2
+# ACCEL_MIN = -3.0 # 3   m/s2
+# ACCEL_SCALE = max(ACCEL_MAX, -ACCEL_MIN)
 
-def accel_hysteresis(accel, accel_steady):
-
-  # for small accel oscillations within ACCEL_HYST_GAP, don't change the accel command
-  if accel > accel_steady + ACCEL_HYST_GAP:
-    accel_steady = accel - ACCEL_HYST_GAP
-  elif accel < accel_steady - ACCEL_HYST_GAP:
-    accel_steady = accel + ACCEL_HYST_GAP
-  accel = accel_steady
-
-  return accel, accel_steady
+# def accel_hysteresis(accel, accel_steady):
+#
+#   # for small accel oscillations within ACCEL_HYST_GAP, don't change the accel command
+#   if accel > accel_steady + ACCEL_HYST_GAP:
+#     accel_steady = accel - ACCEL_HYST_GAP
+#   elif accel < accel_steady - ACCEL_HYST_GAP:
+#     accel_steady = accel + ACCEL_HYST_GAP
+#   accel = accel_steady
+#
+#   return accel, accel_steady
 
 def process_hud_alert(enabled, fingerprint, visual_alert, left_lane,
                       right_lane, left_lane_depart, right_lane_depart, button_on):
@@ -70,15 +68,15 @@ class CarController():
     self.blinker_end_frame = 0.
 
     # hkg
-    self.accel_steady = 0
+    # self.accel_steady = 0
     self.apply_steer_last = 0
     self.steer_rate_limited = False
     self.lkas11_cnt = 0
-    self.scc12_cnt = 0
+    # self.scc12_cnt = 0
     self.last_resume_frame = 0
     self.turning_signal_timer = 0
     self.lkas_button_on = True
-    self.longcontrol = CP.openpilotLongitudinalControl
+    # self.longcontrol = CP.openpilotLongitudinalControl
     self.scc_live = not CP.radarOffCan
 
   def update(self, enabled, CS, frame, actuators, pcm_cancel_cmd, visual_alert,
@@ -87,10 +85,10 @@ class CarController():
     # *** compute control surfaces ***
 
     # gas and brake
-    apply_accel = actuators.gas - actuators.brake
-
-    apply_accel, self.accel_steady = accel_hysteresis(apply_accel, self.accel_steady)
-    apply_accel = clip(apply_accel * ACCEL_SCALE, ACCEL_MIN, ACCEL_MAX)
+    # apply_accel = actuators.gas - actuators.brake
+    #
+    # apply_accel, self.accel_steady = accel_hysteresis(apply_accel, self.accel_steady)
+    # apply_accel = clip(apply_accel * ACCEL_SCALE, ACCEL_MIN, ACCEL_MAX)
 
     # Steering Torque
     new_steer = actuators.steer * SteerLimitParams.STEER_MAX
@@ -114,14 +112,14 @@ class CarController():
       self.blinker_end_frame = 0
     if self.last_blinker_on and not blinker_on:
       self.blinker_end_frame = frame + dragonconf.dpSignalOffDelay
-    apply_steer = common_controller_ctrl(enabled,
+    apply_steer = common_controller_ctrl(lkas_active,
                                          dragonconf.dpLatCtrl,
                                          dragonconf.dpSteeringOnSignal,
                                          blinker_on or frame < self.blinker_end_frame,
                                          apply_steer)
 
     self.last_blinker_on = blinker_on
-    self.apply_accel_last = apply_accel
+    # self.apply_accel_last = apply_accel
     self.apply_steer_last = apply_steer
 
     sys_warning, sys_state, left_lane_warning, right_lane_warning = \
@@ -139,7 +137,7 @@ class CarController():
 
     if frame == 0: # initialize counts from last received count signals
       self.lkas11_cnt = CS.lkas11["CF_Lkas_MsgCount"]
-      self.scc12_cnt = CS.scc12["CR_VSM_Alive"] + 1 if not CS.no_radar else 0
+      # self.scc12_cnt = CS.scc12["CR_VSM_Alive"] + 1 if not CS.no_radar else 0
 
       #TODO: fix this
       # self.prev_scc_cnt = CS.scc11["AliveCounterACC"]
@@ -158,7 +156,7 @@ class CarController():
     self.prev_scc_cnt = CS.scc11["AliveCounterACC"]
 
     self.lkas11_cnt = (self.lkas11_cnt + 1) % 0x10
-    self.scc12_cnt %= 0xF
+    # self.scc12_cnt %= 0xF
 
     can_sends = []
     can_sends.append(create_lkas11(self.packer, frame, self.car_fingerprint, apply_steer, lkas_active,
@@ -172,27 +170,27 @@ class CarController():
     if frame % 2 and CS.mdps_bus: # send clu11 to mdps if it is not on bus 0
       can_sends.append(create_clu11(self.packer, frame, CS.mdps_bus, CS.clu11, Buttons.NONE, enabled_speed))
 
-    if pcm_cancel_cmd and self.longcontrol:
-      can_sends.append(create_clu11(self.packer, frame, CS.scc_bus, CS.clu11, Buttons.CANCEL, clu11_speed))
+    if pcm_cancel_cmd:
+      can_sends.append(create_clu11(self.packer, frame, 0, CS.clu11, Buttons.CANCEL, clu11_speed))
     elif CS.out.cruiseState.standstill:
       # SCC won't resume anyway when the lead distace is less than 3.7m
       # send resume at a max freq of 5Hz
       if CS.lead_distance > 3.7 and (frame - self.last_resume_frame)*DT_CTRL > 0.2:
-        can_sends.append(create_clu11(self.packer, frame, CS.scc_bus, CS.clu11, Buttons.RES_ACCEL, clu11_speed))
+        can_sends.append(create_clu11(self.packer, frame, 0, CS.clu11, Buttons.RES_ACCEL, clu11_speed))
         self.last_resume_frame = frame
 
     if CS.mdps_bus: # send mdps12 to LKAS to prevent LKAS error
       can_sends.append(create_mdps12(self.packer, frame, CS.mdps12))
 
     # send scc to car if longcontrol enabled and SCC not on bus 0 or ont live
-    if self.longcontrol and (CS.scc_bus or not self.scc_live) and frame % 2 == 0:
-      can_sends.append(create_scc12(self.packer, apply_accel, enabled, self.scc12_cnt, self.scc_live, CS.scc12))
-      can_sends.append(create_scc11(self.packer, frame, enabled, set_speed, lead_visible, self.scc_live, CS.scc11))
-      if CS.has_scc13 and frame % 20 == 0:
-        can_sends.append(create_scc13(self.packer, CS.scc13))
-      if CS.has_scc14:
-        can_sends.append(create_scc14(self.packer, enabled, CS.scc14))
-      self.scc12_cnt += 1
+    # if self.longcontrol and (CS.scc_bus or not self.scc_live) and frame % 2 == 0:
+    #   can_sends.append(create_scc12(self.packer, apply_accel, enabled, self.scc12_cnt, self.scc_live, CS.scc12))
+    #   can_sends.append(create_scc11(self.packer, frame, enabled, set_speed, lead_visible, self.scc_live, CS.scc11))
+    #   if CS.has_scc13 and frame % 20 == 0:
+    #     can_sends.append(create_scc13(self.packer, CS.scc13))
+    #   if CS.has_scc14:
+    #     can_sends.append(create_scc14(self.packer, enabled, CS.scc14))
+    #   self.scc12_cnt += 1
 
     # 20 Hz LFA MFA message
     if frame % 5 == 0 and self.car_fingerprint in FEATURES["send_lfa_mfa"]:

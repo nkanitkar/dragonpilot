@@ -361,8 +361,8 @@ FEATURES = {
   "use_elect_ems": [CAR.SONATA_H, CAR.IONIQ_EV_LTD, CAR.KIA_NIRO_EV, CAR.KONA_EV],
   # send LFA MFA message for new HKG models
   "send_lfa_mfa": [CAR.SONATA, CAR.PALISADE, CAR.SONATA_H, CAR.SANTA_FE, CAR.KIA_NIRO_EV],
-  "has_scc13": [],
-  "has_scc14": [],
+  # "has_scc13": [],
+  # "has_scc14": [],
   # these cars use the FCA11 message for the AEB and FCW signals, all others use SCC12
   "use_fca": [CAR.SONATA, CAR.ELANTRA, CAR.ELANTRA_GT_I30, CAR.KIA_STINGER, CAR.KONA, CAR.KONA_EV, CAR.KIA_FORTE, CAR.PALISADE],
 }

@@ -372,7 +372,7 @@ static void ui_draw_world(UIState *s) {
   ui_draw_vision_lanes(s);
 
   // Draw lead indicators if openpilot is handling longitudinal
-  if (scene->dpUiLead && s->longitudinal_control) {
+  if (scene->dpUiLead) {
     if (scene->lead_data[0].getStatus()) {
       draw_lead(s, scene->lead_data[0]);
     }

@@ -106,7 +106,6 @@ class CarInterface(CarInterfaceBase):
 
   # returns a car.CarState
   def update(self, c, can_strings, dragonconf):
-    canMonoTimes = []
     buttonEvents = []
 
     # Process the most recent CAN message traffic, and check for validity

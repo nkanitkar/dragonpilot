@@ -79,7 +79,7 @@ dMonitoringState: [8073, true, 5., 1]
 offroadLayout: [8074, false, 0.]
 wideEncodeIdx: [8075, true, 20.]
 
-dragonConf: [8075, false, 2.]
+dragonConf: [8088, false, 2.]
 
 testModel: [8040, false, 0.]
 testLiveLocation: [8045, false, 0.]

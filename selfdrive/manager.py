@@ -616,6 +616,7 @@ def main():
   del managed_processes['tombstoned']
   if params.get("dp_logger") == b'0' or \
           params.get("dp_atl") == b'1' or \
+          params.get("dp_hkg") == b'1' or \
           params.get("dp_steering_monitor") == b'0':
     del managed_processes['loggerd']
     del managed_processes['logmessaged']

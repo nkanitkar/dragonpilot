@@ -21,7 +21,7 @@ class CarState(CarStateBase):
     self.lkas_button_on = True
     self.has_scc13 = CP.carFingerprint in FEATURES["has_scc13"]
     self.has_scc14 = CP.carFingerprint in FEATURES["has_scc14"]
-    self.cruise_main_button = 0
+    # self.cruise_main_button = 0
     self.mdps_error_cnt = 0
     self.spas_enabled = CP.spasEnabled
 
@@ -31,7 +31,7 @@ class CarState(CarStateBase):
     cp_scc = cp2 if self.scc_bus == 1 else cp_cam if self.scc_bus == 2 else cp
 
     self.prev_cruise_buttons = self.cruise_buttons
-    self.prev_cruise_main_button = self.cruise_main_button
+    # self.prev_cruise_main_button = self.cruise_main_button
     self.prev_left_blinker = self.leftBlinker
     self.prev_right_blinker = self.rightBlinker
     self.prev_lkas_button_on = self.lkas_button_on
@@ -76,7 +76,7 @@ class CarState(CarStateBase):
         cp.vl["LVR12"]["CF_Lvr_CruiseSet"] * speed_conv
     else:
       ret.cruiseState.speed = 0
-    self.cruise_main_button = cp.vl["CLU11"]["CF_Clu_CruiseSwMain"]
+    # self.cruise_main_button = cp.vl["CLU11"]["CF_Clu_CruiseSwMain"]
     self.cruise_buttons = cp.vl["CLU11"]["CF_Clu_CruiseSwState"]
 
     # TODO: Find brake pressure

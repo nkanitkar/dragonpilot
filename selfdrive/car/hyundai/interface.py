@@ -316,11 +316,11 @@ class CarInterface(CarInterfaceBase):
       else:
         be.type = ButtonType.unknown
       buttonEvents.append(be)
-    if self.CS.cruise_main_button != self.CS.prev_cruise_main_button:
-      be = car.CarState.ButtonEvent.new_message()
-      be.type = ButtonType.altButton3
-      be.pressed = bool(self.CS.cruise_main_button)
-      buttonEvents.append(be)
+    # if self.CS.cruise_main_button != self.CS.prev_cruise_main_button:
+    #   be = car.CarState.ButtonEvent.new_message()
+    #   be.type = ButtonType.altButton3
+    #   be.pressed = bool(self.CS.cruise_main_button)
+    #   buttonEvents.append(be)
     ret.buttonEvents = buttonEvents
 
     events = self.create_common_events(ret)

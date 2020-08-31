@@ -358,7 +358,7 @@ FEATURES = {
   # Use E_GEAR Message for Gear Selection
   "use_elect_gears": [CAR.KIA_OPTIMA_H, CAR.IONIQ_EV_LTD, CAR.KONA_EV, CAR.SONATA_H, CAR.KIA_NIRO_EV, CAR.KIA_CARDENZA_HEV, CAR.GRANDEUR_HEV, CAR.IONIQ],
   # Use E_EMS11 Message for Gas and Brake for Hybrid/ELectric
-  "use_elect_ems": [CAR.SONATA_H, CAR.IONIQ_EV_LTD, CAR.KIA_NIRO_EV, CAR.KONA_EV],
+  "use_elect_ems": [CAR.SONATA_H, CAR.IONIQ_EV_LTD, CAR.KIA_NIRO_EV, CAR.KONA_EV, CAR.IONIQ],
   # send LFA MFA message for new HKG models
   "send_lfa_mfa": [CAR.SONATA, CAR.PALISADE, CAR.SONATA_H, CAR.SANTA_FE, CAR.KIA_NIRO_EV],
   # these cars use the FCA11 message for the AEB and FCW signals, all others use SCC12

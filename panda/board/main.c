@@ -147,17 +147,17 @@ void set_safety_mode(uint16_t mode, int16_t param) {
     default:
       set_intercept_relay(true);
       heartbeat_counter = 0U;
-      #ifdef hkg
       if (board_has_obd()) {
+        #ifdef hkg
         if (mode_copy == SAFETY_HYUNDAI_LEGACY || mode_copy == SAFETY_HYUNDAI) {
           current_board->set_can_mode(CAN_MODE_OBD_CAN2);
         } else {
           current_board->set_can_mode(CAN_MODE_NORMAL);
         }
+        #else
+        current_board->set_can_mode(CAN_MODE_NORMAL);
+        #endif
       }
-      #else
-      current_board->set_can_mode(CAN_MODE_NORMAL);
-      #endif
       can_silent = ALL_CAN_LIVE;
       break;
   }

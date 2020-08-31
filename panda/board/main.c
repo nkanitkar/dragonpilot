@@ -147,6 +147,7 @@ void set_safety_mode(uint16_t mode, int16_t param) {
     default:
       set_intercept_relay(true);
       heartbeat_counter = 0U;
+      #ifdef hkg
       if (board_has_obd()) {
         if (mode_copy == SAFETY_HYUNDAI_LEGACY || mode_copy == SAFETY_HYUNDAI) {
           current_board->set_can_mode(CAN_MODE_OBD_CAN2);
@@ -154,6 +155,9 @@ void set_safety_mode(uint16_t mode, int16_t param) {
           current_board->set_can_mode(CAN_MODE_NORMAL);
         }
       }
+      #else
+      current_board->set_can_mode(CAN_MODE_NORMAL);
+      #endif
       can_silent = ALL_CAN_LIVE;
       break;
   }
@@ -721,6 +725,7 @@ void TIM1_BRK_TIM9_IRQ_Handler(void) {
         set_power_save_state(POWER_SAVE_STATUS_ENABLED);
       }
       #endif
+
       // Also disable IR when the heartbeat goes missing
       current_board->set_ir_power(0U);
 

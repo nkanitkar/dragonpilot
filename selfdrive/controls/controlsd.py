@@ -155,7 +155,7 @@ class Controls:
     # dp
     self.dp_lead_count = 0
     self.dp_camera_offset = CAMERA_OFFSET
-    self.dp_hkg = False
+    # self.dp_hkg = False
 
   def update_events(self, CS):
     """Compute carEvents from carState"""
@@ -440,12 +440,12 @@ class Controls:
     CC.actuators = actuators
 
     CC.cruiseControl.override = True
-    if self.sm.updated['dragonConf']:
-      self.dp_hkg = self.sm['dragonConf'].dpHkg
-    if self.dp_hkg:
-      CC.cruiseControl.cancel = self.CP.enableCruise and not self.enabled and CS.cruiseState.enabled
-    else:
-      CC.cruiseControl.cancel = not self.CP.enableCruise or (not self.enabled and CS.cruiseState.enabled)
+    # if self.sm.updated['dragonConf']:
+    #   self.dp_hkg = self.sm['dragonConf'].dpHkg
+    # if self.dp_hkg:
+    #   CC.cruiseControl.cancel = self.CP.enableCruise and not self.enabled and CS.cruiseState.enabled
+    # else:
+    CC.cruiseControl.cancel = not self.CP.enableCruise or (not self.enabled and CS.cruiseState.enabled)
 
     # Some override values for Honda
     # brake discount removes a sharp nonlinearity

@@ -38,20 +38,15 @@ def process_hud_alert(enabled, fingerprint, visual_alert, left_lane,
 
 class CarController():
   def __init__(self, dbc_name, CP, VM):
+    self.apply_steer_last = 0
     self.car_fingerprint = CP.carFingerprint
     self.packer = CANPacker(dbc_name)
     self.steer_rate_limited = False
+    self.last_resume_frame = 0
 
     # dp
     self.last_blinker_on = False
     self.blinker_end_frame = 0.
-
-    # hkg
-    self.apply_steer_last = 0
-    self.steer_rate_limited = False
-    self.last_resume_frame = 0
-    self.turning_signal_timer = 0
-    self.scc_live = not CP.radarOffCan
 
   def update(self, enabled, CS, frame, actuators, pcm_cancel_cmd, visual_alert,
              left_lane, right_lane, left_lane_depart, right_lane_depart, dragonconf):
@@ -68,7 +63,7 @@ class CarController():
     lkas_active = enabled and abs(CS.out.steeringAngle) < 90.
 
     # fix for Genesis hard fault at low speed
-    if CS.out.vEgo < 60 * CV.KPH_TO_MS and self.car_fingerprint == CAR.HYUNDAI_GENESIS and not CS.mdps_bus:
+    if CS.out.vEgo < 16.7 and self.car_fingerprint == CAR.HYUNDAI_GENESIS and not CS.mdps_bus:
       lkas_active = False
 
     if not lkas_active:

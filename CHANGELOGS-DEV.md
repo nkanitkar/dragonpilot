@@ -1,3 +1,8 @@
+dragonpilot 0.7.8.1
+========================
+* 加入 ko-KR 翻譯。
+* Added ko-KR translation.
+
 dragonpilot 0.7.8.0
 ========================
 * 基於最新 openpilot 0.7.8 devel.

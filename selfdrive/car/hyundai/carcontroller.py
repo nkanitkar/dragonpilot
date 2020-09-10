@@ -6,8 +6,12 @@ from selfdrive.car.hyundai.values import Buttons, SteerLimitParams, CAR, FEATURE
 from selfdrive.config import Conversions as CV
 from opendbc.can.packer import CANPacker
 from common.dp_common import common_controller_ctrl
+from common.numpy_fast import interp
 
 VisualAlert = car.CarControl.HUDControl.VisualAlert
+
+STEER_MAX_BP = [384, 307, 255]
+V_EGO_BP = [0, 22, 28]
 
 def process_hud_alert(enabled, fingerprint, visual_alert, left_lane,
                       right_lane, left_lane_depart, right_lane_depart):
@@ -54,8 +58,9 @@ class CarController():
     # *** compute control surfaces ***
 
     # Steering Torque
-    new_steer = actuators.steer * SteerLimitParams.STEER_MAX
-    apply_steer = apply_std_steer_torque_limits(new_steer, self.apply_steer_last, CS.out.steeringTorque, SteerLimitParams, True)
+    steer_max = interp(CS.out.vEgo, V_EGO_BP, STEER_MAX_BP)
+    new_steer = actuators.steer * steer_max
+    apply_steer = apply_std_steer_torque_limits(new_steer, self.apply_steer_last, CS.out.steeringTorque, SteerLimitParams, steer_max, True)
     self.steer_rate_limited = new_steer != apply_steer
 
     # disable if steer angle reach 90 deg, otherwise mdps fault in some models

@@ -6,6 +6,8 @@ dragonpilot 0.7.8.1
 * Added Honda Jade support. (Thanks to @lijunhao731)
 * 修正 ui.cc 內存越界的問題。(感謝 @piggy 提供)
 * Fixed ui.cc memory out of bound issue. (Thanks to @piggy)
+* gpxd 記錄改自動存成 zip 格式。
+* gpxd now store in zip format.
 
 dragonpilot 0.7.8.0
 ========================

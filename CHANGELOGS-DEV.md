@@ -8,6 +8,8 @@ dragonpilot 0.7.8.1
 * Fixed ui.cc memory out of bound issue. (Thanks to @piggy)
 * gpxd 記錄改自動存成 zip 格式。
 * gpxd now store in zip format.
+* 強制關閉 panda 檢查 DOS 硬體。
+* Force disabled DOS hardware check in panda.
 
 dragonpilot 0.7.8.0
 ========================

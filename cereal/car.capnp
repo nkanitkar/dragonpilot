@@ -121,6 +121,11 @@ struct CarEvent @0x9b1657f34caf3ad3 {
     manualSteeringRequired @94;
     manualSteeringRequiredBlinkersOn @95;
     leadCarMoving @96;
+
+    # timebomb assist
+    timebombWarn @97;
+    timebombBypassing @98;
+    timebombBypassed @99;
   }
 }
 
@@ -190,6 +195,7 @@ struct CarState {
 
   # dp
   lkMode @37 :Bool;
+  stopSteering @38 :Bool; # timebomb - stopSteering
 
   struct WheelSpeeds {
     # optional wheel speeds

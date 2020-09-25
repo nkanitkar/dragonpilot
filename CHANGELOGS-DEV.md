@@ -1,3 +1,8 @@
+dragonpilot 0.7.8.3
+========================
+* VW 加入 6 分鐘時間方向盤控制限制輔助方案。(特別感謝 @actuallylemoncurd 提供代碼)
+* VW added 6 minutes timebomb assist. (dp_timebomb_assist, special thanks to @actuallylemoncurd)
+
 dragonpilot 0.7.8.2
 ========================
 * 修正在沒網路的情況下，開機超過五分鐘的問題。

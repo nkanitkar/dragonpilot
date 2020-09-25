@@ -210,6 +210,7 @@ def wrong_car_mode_alert(CP, sm, metric):
     text = _("Main Switch Off")
   return NoEntryAlert(text, duration_hud_alert=0.)
 
+
 EVENTS = {
   # ********** events with no alerts **********
 
@@ -849,5 +850,30 @@ EVENTS = {
      "",
      AlertStatus.userPrompt, AlertSize.small,
      Priority.LOW, VisualAlert.steerRequired, AudibleAlert.chimePrompt, .1, .1, .1),
+  },
+
+  # timebomb
+  EventName.timebombWarn: {
+    ET.WARNING: Alert(
+      _("WARNING"),
+      _("Grab wheel to start bypass"),
+      AlertStatus.normal, AlertSize.mid,
+      Priority.LOW, VisualAlert.steerRequired, AudibleAlert.chimeWarning1, .4, 2., 3.),
+  },
+
+  EventName.timebombBypassing: {
+    ET.WARNING: Alert(
+      _("BYPASSING"),
+      _("HOLD WHEEL"),
+      AlertStatus.normal, AlertSize.mid,
+      Priority.LOW, VisualAlert.steerRequired, AudibleAlert.chimeWarning1, .4, 2., 3.),
+  },
+
+  EventName.timebombBypassed: {
+    ET.WARNING: Alert(
+      _("Bypassed!"),
+      _("Release wheel when ready"),
+      AlertStatus.normal, AlertSize.mid,
+      Priority.LOW, VisualAlert.steerRequired, AudibleAlert.chimeWarning1, 3., 2., 3.),
   },
 }

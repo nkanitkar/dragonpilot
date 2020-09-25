@@ -110,6 +110,9 @@ class CarController():
         apply_steer = 0
 
       # dp
+      # timebomb
+      if CS.out.stopSteering:
+        apply_steer = 0
       blinker_on = CS.out.leftBlinker or CS.out.rightBlinker
       if not enabled:
         self.blinker_end_frame = 0

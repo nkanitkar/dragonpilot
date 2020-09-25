@@ -24,6 +24,8 @@ dragonpilot 0.7.8
 * Used dp server for error reporting.
 * 更新服務改使用 gitee 的 IP 檢查連線狀態。
 * updated service uses gitee IP address instead.
+* VW 加入 6 分鐘時間方向盤控制限制輔助方案。(特別感謝 @actuallylemoncurd 提供代碼)
+* VW added 6 minutes timebomb assist. (dp_timebomb_assist, special thanks to @actuallylemoncurd)
 
 dragonpilot 0.7.7.0
 ========================

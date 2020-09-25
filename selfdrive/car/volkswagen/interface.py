@@ -1,11 +1,9 @@
 from cereal import car
 from selfdrive.car.volkswagen.values import CAR, BUTTON_STATES, NWL, TRANS, GEAR, MQB_CARS, PQ_CARS
-from common.params import put_nonblocking
 from selfdrive.car import STD_CARGO_KG, scale_rot_inertia, scale_tire_stiffness, gen_empty_fingerprint
 from selfdrive.car.interfaces import CarInterfaceBase
 from common.dp_common import common_interface_atl, common_interface_get_params_lqr
 
-GEAR = car.CarState.GearShifter
 EventName = car.CarEvent.EventName
 
 class CarInterface(CarInterfaceBase):
@@ -21,6 +19,11 @@ class CarInterface(CarInterfaceBase):
 
     # Set up an alias to PT/CAM parser for ACC depending on its detected network location
     self.cp_acc = self.cp if CP.networkLocation == NWL.fwdCamera else self.cp_cam
+
+    # timebomb_counter mod
+    self.timebomb_counter = 0
+    self.wheel_grabbed = False
+    self.timebomb_bypass_counter = 0
 
   @staticmethod
   def compute_gb(accel, speed):
@@ -46,10 +49,10 @@ class CarInterface(CarInterfaceBase):
     ret.lateralTuning.pid.kf = 0.00006
 
     # PER-PLATFORM PARAMETERS - DO NOT EDIT HERE TO TUNE INDIVIDUAL VEHICLES
+    ret.carName = "volkswagen"
 
     if candidate in MQB_CARS:
       # Configurations shared between all MQB vehicles
-      ret.carName = "volkswagen"
       ret.safetyModel = car.CarParams.SafetyModel.volkswagen
 
       # Determine installed network location and trans type from fingerprint
@@ -63,7 +66,6 @@ class CarInterface(CarInterfaceBase):
 
     elif candidate in PQ_CARS:
       # Configurations shared between all PQ35/PQ46/NMS vehicles
-      ret.carName = "volkswagen"
       ret.safetyModel = car.CarParams.SafetyModel.volkswagenPq
 
       # Determine installed network location and trans type from fingerprint
@@ -155,6 +157,29 @@ class CarInterface(CarInterfaceBase):
     # Attempt OP engagement only on rising edge of stock ACC engagement.
     elif not self.cruise_enabled_prev:
       events.add(EventName.pcmEnable)
+
+    if dragonconf.dpTimebombAssist:
+      ret.stopSteering = False
+      if ret.cruiseState.enabled:
+        self.timebomb_counter += 1
+      else:
+        self.timebomb_counter = 0
+        self.timebomb_bypass_counter = 0
+
+      if self.timebomb_counter >= 33000: # 330*100 time in seconds until counter threshold for timebombWarn alert
+        if not self.wheel_grabbed:
+          events.add(EventName.timebombWarn)
+        if self.wheel_grabbed or ret.steeringPressed:
+          self.wheel_grabbed = True
+          ret.stopSteering = True
+          self.timebomb_bypass_counter += 1
+          if self.timebomb_bypass_counter >= 300: # 3*100 time alloted for bypass
+            self.wheel_grabbed = False
+            self.timebomb_counter = 0
+            self.timebomb_bypass_counter = 0
+            events.add(EventName.timebombBypassed)
+          else:
+            events.add(EventName.timebombBypassing)
 
     ret.events = events.to_msg()
     ret.buttonEvents = buttonEvents

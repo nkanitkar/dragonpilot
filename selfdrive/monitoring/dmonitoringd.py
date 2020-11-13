@@ -53,7 +53,7 @@ def dmonitoringd_thread(sm=None, pm=None):
       driver_status.threshold_pre = 15. / sm['dragonConf'].dpSteeringMonitorTimer
       driver_status.threshold_prompt = 6. / sm['dragonConf'].dpSteeringMonitorTimer
       driver_status.step_change = DT_DMON / sm['dragonConf'].dpSteeringMonitorTimer
-      if not sm['dragonConf'].dpSteeringMonitor:
+      if not sm['dragonConf'].dpSteeringMonitor or True:
         driver_status.awareness = 1.
         driver_status.awareness_active = 1.
         driver_status.awareness_passive = 1.
